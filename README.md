@@ -1,19 +1,40 @@
-# import library
+```python
+# ============================================================
+# 1. Library Imports
+# ============================================================
+
+# 標準ライブラリ
 import os
+import time
+import random
+from dataclasses import dataclass
+
+# 環境変数の設定 (GPUメモリ管理)
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
-import time
-from tqdm import tqdm
+
+# サードパーティライブラリ
 import numpy as np
-from scipy.io import loadmat
 from PIL import Image
+from tqdm import tqdm
+from scipy.io import loadmat
+
+# Optuna (ハイパーパラメータ最適化)
+# !pip install optuna  # 必要に応じて実行環境で実行してください
+import optuna
+
+# PyTorch 関連
 import torch
 import torch.nn as nn
 from torch import optim
 import torch.utils.data as data
 from torch.utils.data import random_split, DataLoader
+from torch.cuda.amp import autocast, GradScaler
+
+# torchvision 関連
 from torchvision.datasets import VisionDataset
 from torchvision import transforms
+import torchvision.transforms.functional as TF
 from torchvision.transforms import (
     Compose,
     RandomResizedCrop,
@@ -26,12 +47,7 @@ from torchvision.transforms import (
     Lambda,
     InterpolationMode
 )
-from torch.cuda.amp import autocast, GradScaler
-from dataclasses import dataclass
-import random
-import torchvision.transforms.functional as TF
-!pip install optuna
-import optuna
+```
 # DataLoader
 # カラーマップ生成関数：セグメンテーションの可視化用
 def colormap(N=256, normalized=False):

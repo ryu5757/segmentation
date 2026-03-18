@@ -68,6 +68,7 @@ def colormap(N=256, normalized=False):
 
     cmap = cmap/255 if normalized else cmap
     return cmap
+```
 # Model Section
 # 2つの畳み込み層とバッチ正規化、ReLUを含むブロック
 # UNetの各層で使用される基本的な畳み込みブロック

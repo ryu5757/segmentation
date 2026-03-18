@@ -46,9 +46,10 @@ from torchvision.transforms import (
     InterpolationMode
 )
 ```
-### カラーマップ生成関数：セグメンテーションの可視化用
+### # DataLoader
 
 ```python
+カラーマップ生成関数：セグメンテーションの可視化用
 def colormap(N=256, normalized=False):
     def bitget(byteval, idx):
         return ((byteval & (1 << idx)) != 0)
@@ -134,6 +135,7 @@ class NYUv2(VisionDataset):
         return len(self.images)
 ```
 # Model Section
+```python
 # 2つの畳み込み層とバッチ正規化、ReLUを含むブロック
 # UNetの各層で使用される基本的な畳み込みブロック
 class DoubleConv(nn.Module):
@@ -236,7 +238,9 @@ class CustomUNet(nn.Module):
 
 
         return self.final(self.final_up(d1))
+```
 # Train and Valid
+```python
 # config
 @dataclass
 class TrainingConfig:
@@ -274,7 +278,8 @@ class TrainingConfig:
     def __post_init__(self):
         import os
         os.makedirs(self.checkpoint_dir, exist_ok=True)
-
+```
+```python
 def set_seed(seed):
     """
     シードを固定する．
@@ -291,7 +296,8 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-
+```
+```python
 set_seed(42)
 # 設定の初期化
 config = TrainingConfig(
@@ -651,8 +657,9 @@ if __name__ == "__main__":
     model_path = f"model_{current_time}.pt"
     torch.save(model.state_dict(), model_path)
     print(f"Model saved to {model_path}")
+```
 
-
+```python
 # ------------------
 
 #    Evaluation
@@ -677,3 +684,4 @@ predictions = torch.cat(predictions, dim=0)
 predictions = predictions.cpu().numpy()
 np.save('submission.npy', predictions)
 print("Predictions saved to submission.npy")
+```

@@ -46,7 +46,7 @@ from torchvision.transforms import (
     InterpolationMode
 )
 ```
-### # DataLoader
+# 2.DataLoader
 
 ```python
 カラーマップ生成関数：セグメンテーションの可視化用
@@ -134,7 +134,7 @@ class NYUv2(VisionDataset):
     def __len__(self):
         return len(self.images)
 ```
-# Model Section
+# 3.Model Section
 ```python
 # 2つの畳み込み層とバッチ正規化、ReLUを含むブロック
 # UNetの各層で使用される基本的な畳み込みブロック
@@ -239,7 +239,7 @@ class CustomUNet(nn.Module):
 
         return self.final(self.final_up(d1))
 ```
-# Train and Valid
+# 4.Train and Valid
 ```python
 # config
 @dataclass

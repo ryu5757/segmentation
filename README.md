@@ -46,8 +46,9 @@ from torchvision.transforms import (
     InterpolationMode
 )
 ```
-# DataLoader
-# カラーマップ生成関数：セグメンテーションの可視化用
+### カラーマップ生成関数：セグメンテーションの可視化用
+
+```python
 def colormap(N=256, normalized=False):
     def bitget(byteval, idx):
         return ((byteval & (1 << idx)) != 0)
@@ -67,70 +68,6 @@ def colormap(N=256, normalized=False):
 
     cmap = cmap/255 if normalized else cmap
     return cmap
-
-# NYUv2データセット：RGB画像、セグメンテーション、深度、法線マップを提供するデータセット
-class NYUv2(VisionDataset):
-    """NYUv2 dataset
-
-    Args:
-        root (string): Root directory path.
-        split (string, optional): 'train' for training set, and 'test' for test set. Default: 'train'.
-        target_type (string, optional): Type of target to use, ``semantic``, ``depth``.
-        transform (callable, optional): A function/transform that takes in an PIL image and returns a transformed version.
-        target_transform (callable, optional): A function/transform that takes in the target and transforms it.
-    """
-    cmap = colormap()
-    def __init__(self,
-                 root,
-                 split='train',
-                 include_depth=False,
-                 transform=None,
-                 target_transform=None,
-                 ):
-        super(NYUv2, self).__init__(root, transform=transform, target_transform=target_transform)
-
-        # データセットの基本設定
-        assert(split in ('train', 'test'))
-        self.root = root
-        self.split = split
-        self.include_depth = include_depth
-        self.train_idx = np.array([255, ] + list(range(13)))  # 13クラス分類用
-
-        # 画像ファイルのパスリストを作成
-        img_names = os.listdir(os.path.join(self.root, self.split, 'image'))
-        img_names.sort()
-        images_dir = os.path.join(self.root, self.split, 'image')
-        self.images = [os.path.join(images_dir, name) for name in img_names]
-
-        label_dir = os.path.join(self.root, self.split, 'label')
-        if (self.split == 'train'):
-          self.labels = [os.path.join(label_dir, name) for name in img_names]
-          self.targets = self.labels
-
-        depth_dir = os.path.join(self.root, self.split, 'depth')
-        self.depths = [os.path.join(depth_dir, name) for name in img_names]
-
-    def __getitem__(self, idx):
-        image = Image.open(self.images[idx])
-        depth = Image.open(self.depths[idx])
-
-        if self.transform is not None:
-            image = self.transform(image)
-            depth = self.transform(depth)
-        if self.split=='test':
-          if self.include_depth:
-              return image, depth
-          return image
-        if self.split == 'train' and self.target_transform is not None:
-            target = Image.open(self.targets[idx])
-            target = self.target_transform(target)
-        if self.include_depth:
-              return image, depth, target
-
-        return image, target
-
-    def __len__(self):
-        return len(self.images)
 # Model Section
 # 2つの畳み込み層とバッチ正規化、ReLUを含むブロック
 # UNetの各層で使用される基本的な畳み込みブロック

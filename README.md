@@ -660,4 +660,4 @@ predictions = torch.cat(predictions, dim=0)
 
 predictions = predictions.cpu().numpy()
 np.save('submission.npy', predictions)
-print("Predictions saved to submission.npy")これらのコードをgithubにポートフォリオとして掲載したいです見やすく表示できるようにしてください
+print("Predictions saved to submission.npy")
